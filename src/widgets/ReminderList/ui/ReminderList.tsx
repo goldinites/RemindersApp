@@ -2,13 +2,14 @@
 
 import ReminderItem from '@/src/entities/ReminderItem';
 import { ReminderListProps } from '@/src/widgets/ReminderList/model/ReminderList.models';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import ReminderEditor from '@/src/features/ReminderEditor';
 import NewReminder from '@/src/features/NewReminder';
 import { useReminderList } from '@/src/widgets/ReminderList/model/useReminderList';
 import Image from 'next/image';
 import BackIcon from '@/src/shared/assets/icons/back.svg';
 import Heading from '@/src/shared/ui/Heading';
+import { Reorder } from 'framer-motion';
 
 const mode = {
   list: { translateX: '0' },
@@ -18,6 +19,7 @@ const mode = {
 export const ReminderList = ({ list }: ReminderListProps) => {
   const {
     reminders,
+    setReminders,
     editReminder,
     handleSetEditReminder,
     handleAddReminder,
@@ -50,7 +52,13 @@ export const ReminderList = ({ list }: ReminderListProps) => {
           variants={mode}
         >
           <div className={'h-full flex-1 overflow-hidden'}>
-            <ul className={'scrollbar h-full overflow-y-scroll pr-1'}>
+            <Reorder.Group
+              as={'ul'}
+              values={reminders}
+              layoutScroll
+              onReorder={setReminders}
+              className={'scrollbar h-full overflow-y-scroll'}
+            >
               <NewReminder onAdd={(reminder) => handleAddReminder(reminder)} />
               {reminders.map((reminder) => (
                 <ReminderItem
@@ -59,7 +67,14 @@ export const ReminderList = ({ list }: ReminderListProps) => {
                   onEdit={(reminder) => handleSetEditReminder(reminder)}
                 />
               ))}
-            </ul>
+            </Reorder.Group>
+            <motion.ul
+              layout
+              layoutId={'list'}
+              className={'scrollbar h-full overflow-y-scroll pr-1'}
+            >
+              <AnimatePresence></AnimatePresence>
+            </motion.ul>
           </div>
           <div className={'flex-1'}>
             {editReminder && (

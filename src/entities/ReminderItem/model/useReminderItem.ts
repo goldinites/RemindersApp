@@ -11,7 +11,11 @@ export const useReminderItem = (
     useState<boolean>(isCompleted);
 
   const paddingLeft = useMemo(() => {
-    return 12 * level;
+    if (level === 1) {
+      return 12;
+    }
+
+    return 36 * (level - 1);
   }, [level]);
 
   const handleCompleteReminder = useCallback(

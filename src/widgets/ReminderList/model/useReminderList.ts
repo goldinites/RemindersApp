@@ -63,6 +63,7 @@ export const useReminderList = (list: IReminderItem[]) => {
 
   return {
     reminders,
+    setReminders,
     editReminder,
     handleAddReminder,
     handleUpdateReminder,

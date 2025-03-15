@@ -3,6 +3,7 @@ import Button from '@/src/shared/ui/Button';
 import TextField from '@/src/shared/ui/TextField';
 import TextArea from '@/src/shared/ui/TextArea';
 import { useReminderEditor } from '@/src/features/ReminderEditor/model/useReminderEditor';
+import CheckIcon from '@/src/shared/assets/icons/check.svg';
 import TrashIcon from '@/src/shared/assets/icons/trash.svg';
 import Image from 'next/image';
 
@@ -44,20 +45,20 @@ export const ReminderEditor = ({
             onChange={handleUpdateText}
           />
         </div>
-        <div className={'self-end'}>
-          <Button onClick={() => handleDelete(reminder.id)}>
-            <Image src={TrashIcon} alt={'delete'} />
-            Удалить
-          </Button>
-        </div>
       </div>
-      <div className={'flex w-1/3 gap-x-2'}>
+      <div className={'flex w-full justify-between gap-x-12'}>
+        <Button
+          variant={'warning'}
+          size={'lg'}
+          onClick={() => handleDelete(reminder.id)}
+        >
+          <Image src={TrashIcon} alt={'delete'} />
+          Удалить
+        </Button>
         <Button size={'lg'} onClick={handleSave}>
+          <Image src={CheckIcon} alt={'accept'} />
           Сохранить
         </Button>
-        {/*<Button size={'lg'} onClick={onCancel} variant={'outline'}>*/}
-        {/*  Отменить*/}
-        {/*</Button>*/}
       </div>
     </div>
   );

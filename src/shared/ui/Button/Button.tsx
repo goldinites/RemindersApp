@@ -7,6 +7,7 @@ const button = tv({
       primary: 'bg-indigo-500 text-white hover:bg-indigo-400',
       outline:
         'bg-white inset-ring-2 inset-ring-indigo-500 text-indigo-500 hover:text-white hover:bg-indigo-500',
+      warning: 'bg-orange-700 text-white hover:bg-red-800',
     },
     size: {
       xs: 'text-xs px-1.75 py-1.25',

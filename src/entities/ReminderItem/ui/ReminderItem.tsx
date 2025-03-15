@@ -1,6 +1,12 @@
-import { ReminderItemProps } from '@/src/entities/ReminderItem/model/ReminderItem.models';
+import {
+  IReminderItem,
+  ReminderItemProps,
+} from '@/src/entities/ReminderItem/model/ReminderItem.models';
 import Checkbox from '@/src/shared/ui/Checkbox';
 import { useReminderItem } from '@/src/entities/ReminderItem/model/useReminderItem';
+import { useIsPresent } from 'framer-motion';
+import { Reorder } from 'framer-motion';
+import { useState } from 'react';
 
 export const ReminderItem = ({
   data,
@@ -17,12 +23,37 @@ export const ReminderItem = ({
     defineColorOfBorder,
   } = useReminderItem(data.isCompleted, level, onEdit);
 
+  const isPresent = useIsPresent();
+
+  const [nestedItems, setNestedItems] = useState<IReminderItem[] | undefined>(
+    data.nested,
+  );
+
+  const [isDragging, setIsDragging] = useState(false);
+
   return (
-    <li>
+    <Reorder.Item
+      as={'li'}
+      layout
+      initial={{ scaleY: 0, opacity: 0 }}
+      animate={{ scaleY: 1, opacity: 1 }}
+      transition={{ type: 'spring', stiffness: 900, damping: 40 }}
+      className={`origin-top ${isPresent ? 'static' : 'absolute'}`}
+      key={data.id}
+      value={data}
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={() => {
+        setTimeout(() => setIsDragging(false), 300);
+      }}
+    >
       <div
         className='flex w-full justify-between gap-x-2 rounded-lg py-3 pr-3 hover:bg-indigo-50'
         style={{ paddingLeft }}
         onClick={(evt) => {
+          if (isDragging) {
+            return;
+          }
+
           evt.stopPropagation();
           handleEditReminder(data);
         }}
@@ -51,9 +82,13 @@ export const ReminderItem = ({
           </div>
         </div>
       </div>
-      {!!data.nested?.length && (
-        <ul>
-          {data.nested.map((reminder) => (
+      {!!nestedItems?.length && (
+        <Reorder.Group
+          as={'ul'}
+          values={nestedItems}
+          onReorder={setNestedItems}
+        >
+          {nestedItems.map((reminder) => (
             <ReminderItem
               key={reminder.id}
               data={reminder}
@@ -61,8 +96,8 @@ export const ReminderItem = ({
               onEdit={(reminder) => handleEditReminder(reminder)}
             />
           ))}
-        </ul>
+        </Reorder.Group>
       )}
-    </li>
+    </Reorder.Item>
   );
 };
