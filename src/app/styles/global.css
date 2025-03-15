@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+body {
+    height: 100vh;
+    overflow: hidden;
+}
+
+@layer utilities  {
+    .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        border: 0;
+        padding: 0;
+        white-space: nowrap;
+        clip-path: inset(100%);
+        clip: rect(0 0 0 0);
+        overflow: hidden;
+    }
+
+    .scrollbar {
+        &::-webkit-scrollbar {
+            @apply w-1 h-1 bg-indigo-100 rounded-sm;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            @apply bg-indigo-500 rounded-sm;
+        }
+
+        @-moz-document url-prefix() {
+            scrollbar-width: thin;
+        }
+    }
+}
