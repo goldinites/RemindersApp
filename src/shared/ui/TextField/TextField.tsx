@@ -6,10 +6,18 @@ const textField = tv({
   slots: {
     wrapper: 'flex flex-col gap-y-2 w-full',
     label: 'font-bold text-zinc-900 text-sm',
-    input:
-      'w-full outline-none text-sm ring-1 bg-indigo-50 ring-indigo-300 rounded-2xl hover:ring-indigo-500 focus:bg-white focus:ring-indigo-500 focus:ring-2',
+    input: 'transition w-full outline-none text-sm',
   },
   variants: {
+    variant: {
+      primary: {
+        input:
+          'rounded-2xl ring-1 bg-indigo-50 ring-indigo-300 hover:ring-indigo-500 focus:bg-white focus:ring-indigo-500 focus:ring-2',
+      },
+      empty: {
+        input: '',
+      },
+    },
     size: {
       xs: {
         input: 'px-1.5 py-1',
@@ -31,6 +39,10 @@ const textField = tv({
       },
     },
   },
+  defaultVariants: {
+    variant: 'primary',
+    size: 'md',
+  },
 });
 
 type InputTypes = 'text' | 'number' | 'email' | 'password';
@@ -44,23 +56,26 @@ interface InputProps extends TextFieldVariants {
   type?: InputTypes;
   value?: string;
   onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: () => void;
 }
 
 export const TextField = ({
   label,
   name,
   type,
-  size,
+  size = 'md',
+  variant = 'primary',
   disabled,
   placeholder,
   value,
   onChange,
+  onBlur,
 }: InputProps) => {
   const {
     wrapper,
     label: labelStyle,
     input,
-  } = textField({ disabled: disabled, size: size });
+  } = textField({ disabled: disabled, size: size, variant: variant });
 
   return (
     <label className={wrapper()}>
@@ -73,6 +88,7 @@ export const TextField = ({
         value={value}
         disabled={disabled}
         onChange={onChange}
+        onBlur={onBlur}
       />
     </label>
   );

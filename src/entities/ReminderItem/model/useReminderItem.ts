@@ -5,6 +5,7 @@ export const useReminderItem = (
   isCompleted: boolean,
   level: number,
   onEdit: (reminder: IReminderItem) => void,
+  onAdd?: () => void,
 ) => {
   const [isReminderCompleted, setIsReminderCompleted] =
     useState<boolean>(isCompleted);
@@ -15,7 +16,6 @@ export const useReminderItem = (
 
   const handleCompleteReminder = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      event.stopPropagation();
       setIsReminderCompleted(event.target.checked);
     },
     [setIsReminderCompleted],
@@ -27,6 +27,12 @@ export const useReminderItem = (
     },
     [onEdit],
   );
+
+  const handleAddReminder = useCallback(() => {
+    if (onAdd) {
+      onAdd();
+    }
+  }, [onAdd]);
 
   const defineColorOfBorder = useMemo(() => {
     switch (level) {
@@ -51,5 +57,6 @@ export const useReminderItem = (
     paddingLeft,
     handleEditReminder,
     defineColorOfBorder,
+    handleAddReminder,
   };
 };

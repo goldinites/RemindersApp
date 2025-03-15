@@ -10,5 +10,4 @@ export interface ReminderEditorProps {
   reminder: IReminderItem;
   onSave: (updates: ReminderUpdates) => void;
   onDelete: (id: string) => void;
-  onCancel: () => void;
 }

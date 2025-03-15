@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { IReminderItem } from '@/src/entities/ReminderItem/model/ReminderItem.models';
 import { ReminderUpdates } from '@/src/features/ReminderEditor/model/ReminderEditor.models';
 import { flatten } from '@/src/shared/utils/flatten';
@@ -7,6 +7,12 @@ import { flatToTree } from '@/src/shared/utils/flatToTree';
 export const useReminderList = (list: IReminderItem[]) => {
   const [reminders, setReminders] = useState(list);
   const [editReminder, setEditReminder] = useState<IReminderItem | null>(null);
+
+  const handleAddReminder = useCallback((reminder: IReminderItem) => {
+    setReminders((prevState) => {
+      return [reminder, ...prevState];
+    });
+  }, []);
 
   const handleUpdateReminder = useCallback((updates: ReminderUpdates) => {
     setReminders((prevState) => {
@@ -47,11 +53,21 @@ export const useReminderList = (list: IReminderItem[]) => {
     setEditReminder(value);
   }, []);
 
+  const titleText = useMemo(() => {
+    if (editReminder) {
+      return `Редактирование ${editReminder.title}`;
+    }
+
+    return 'Напоминания';
+  }, [editReminder]);
+
   return {
     reminders,
     editReminder,
+    handleAddReminder,
     handleUpdateReminder,
     handleDeleteReminder,
     handleSetEditReminder,
+    titleText,
   };
 };

@@ -47,7 +47,7 @@ export const Checkbox = ({ checked, disabled, onChange }: CheckboxProps) => {
   } = checkbox({ checked: checked, disabled: disabled });
 
   return (
-    <div className={wrapper()}>
+    <div className={wrapper()} onClick={(event) => event.stopPropagation()}>
       <label className={fakeCheckbox()}>
         <input
           className={checkboxStyles()}

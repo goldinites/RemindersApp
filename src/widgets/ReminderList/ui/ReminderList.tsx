@@ -6,28 +6,40 @@ import { motion } from 'framer-motion';
 import ReminderEditor from '@/src/features/ReminderEditor';
 import NewReminder from '@/src/features/NewReminder';
 import { useReminderList } from '@/src/widgets/ReminderList/model/useReminderList';
+import Image from 'next/image';
+import BackIcon from '@/src/shared/assets/icons/back.svg';
+import Heading from '@/src/shared/ui/Heading';
 
 const mode = {
   list: { translateX: '0' },
   edit: { translateX: '-50%' },
 };
 
-export const ReminderList = ({ heading, list }: ReminderListProps) => {
+export const ReminderList = ({ list }: ReminderListProps) => {
   const {
     reminders,
     editReminder,
     handleSetEditReminder,
+    handleAddReminder,
     handleUpdateReminder,
     handleDeleteReminder,
+    titleText,
   } = useReminderList(list);
 
   return (
     <div className='flex h-full flex-col gap-y-3'>
-      <div className={'flex items-center justify-between gap-x-3'}>
-        {heading}
-        {/*<span className={'cursor-pointer'} onClick={handleAddReminder}>*/}
-        {/*  <Image src={EditIcon} alt={''} />*/}
-        {/*</span>*/}
+      <div className={'flex items-start gap-x-3'}>
+        {editReminder && (
+          <div
+            className={'mt-1.25 flex-[0_0_24px] cursor-pointer'}
+            onClick={() => handleSetEditReminder(null)}
+          >
+            <Image src={BackIcon} alt={'back'} />
+          </div>
+        )}
+        <Heading tag={'h1'} type={editReminder ? 'h3' : 'h1'}>
+          {titleText}
+        </Heading>
       </div>
 
       <div className='h-full w-full overflow-hidden'>
@@ -37,9 +49,9 @@ export const ReminderList = ({ heading, list }: ReminderListProps) => {
           transition={{ duration: 0.25, ease: 'linear' }}
           variants={mode}
         >
-          <div className={'h-full flex-1'}>
+          <div className={'h-full flex-1 overflow-hidden'}>
             <ul className={'scrollbar h-full overflow-y-scroll pr-1'}>
-              <NewReminder />
+              <NewReminder onAdd={(reminder) => handleAddReminder(reminder)} />
               {reminders.map((reminder) => (
                 <ReminderItem
                   key={reminder.id}
@@ -55,7 +67,6 @@ export const ReminderList = ({ heading, list }: ReminderListProps) => {
                 reminder={editReminder}
                 onSave={(updates) => handleUpdateReminder(updates)}
                 onDelete={(id) => handleDeleteReminder(id)}
-                onCancel={() => handleSetEditReminder(null)}
               />
             )}
           </div>

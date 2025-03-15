@@ -10,7 +10,6 @@ export const ReminderEditor = ({
   reminder,
   onSave,
   onDelete,
-  onCancel,
 }: ReminderEditorProps) => {
   const {
     updatedTitle,
@@ -56,9 +55,9 @@ export const ReminderEditor = ({
         <Button size={'lg'} onClick={handleSave}>
           Сохранить
         </Button>
-        <Button size={'lg'} onClick={onCancel} variant={'outline'}>
-          Отменить
-        </Button>
+        {/*<Button size={'lg'} onClick={onCancel} variant={'outline'}>*/}
+        {/*  Отменить*/}
+        {/*</Button>*/}
       </div>
     </div>
   );

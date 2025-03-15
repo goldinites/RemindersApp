@@ -9,9 +9,11 @@ export interface IReminderItem {
 
 export interface ReminderItemProps {
   data: IReminderItem;
+  onEdit: (reminder: IReminderItem) => void;
   level?: number;
   isNewReminder?: boolean;
-  onEdit: (reminder: IReminderItem) => void;
+  reminderTitleField?: React.ReactNode;
+  // onAdd?: () => void;
 }
 
 export interface ReminderFieldEditData {

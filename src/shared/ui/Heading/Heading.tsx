@@ -20,12 +20,17 @@ const heading = tv({
 type HeadingVariants = VariantProps<typeof heading>;
 
 interface HeadingProps extends HeadingVariants {
+  tag: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
   children?: React.ReactNode;
 }
 
-export const Heading = ({ children, type = 'h2' }: HeadingProps) => {
+export const Heading = ({
+  children,
+  tag = 'h2',
+  type = 'h2',
+}: HeadingProps) => {
   const defineHeading = () => {
-    switch (type) {
+    switch (tag) {
       case 'h1':
         return <h1 className={heading({ type })}>{children}</h1>;
       case 'h2':

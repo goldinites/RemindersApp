@@ -1,12 +1,12 @@
 import { ReminderItemProps } from '@/src/entities/ReminderItem/model/ReminderItem.models';
 import Checkbox from '@/src/shared/ui/Checkbox';
 import { useReminderItem } from '@/src/entities/ReminderItem/model/useReminderItem';
-import TextField from '@/src/shared/ui/TextField';
 
 export const ReminderItem = ({
   data,
   level = 1,
   onEdit,
+  reminderTitleField,
   isNewReminder,
 }: ReminderItemProps) => {
   const {
@@ -22,13 +22,13 @@ export const ReminderItem = ({
       <div
         className='flex w-full justify-between gap-x-2 rounded-lg py-3 pr-3 hover:bg-indigo-50'
         style={{ paddingLeft }}
+        onClick={(evt) => {
+          evt.stopPropagation();
+          handleEditReminder(data);
+        }}
       >
         <div
-          className={`flex w-full items-start gap-x-2 border-b-2 ${defineColorOfBorder} pb-3`}
-          onClick={(evt) => {
-            evt.stopPropagation();
-            handleEditReminder(data);
-          }}
+          className={`flex w-full items-start gap-x-2 border-b-2 ${defineColorOfBorder} overflow-hidden pb-3`}
         >
           <div className={'mt-1.75'}>
             <Checkbox
@@ -39,13 +39,13 @@ export const ReminderItem = ({
           </div>
           <div className='flex w-full flex-col gap-y-2'>
             {isNewReminder ? (
-              <div className={'flex h-10 w-1/2 items-center'}>
-                <TextField size={'sm'} placeholder={data.title} />
-              </div>
+              <>{reminderTitleField}</>
             ) : (
-              <span className='flex h-10 items-center text-sm font-bold text-zinc-900'>
-                {data.title}
-              </span>
+              <div className={'w-full'}>
+                <span className='flex h-10 items-center text-sm font-bold text-zinc-900'>
+                  {data.title}
+                </span>
+              </div>
             )}
             <div>{data.text}</div>
           </div>

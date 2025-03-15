@@ -7,7 +7,7 @@ const textArea = tv({
     wrapper: 'h-full flex flex-col gap-y-2',
     label: 'font-bold text-zinc-900 text-sm',
     textarea:
-      'flex-1 resize-none outline-none text-sm ring-1 bg-indigo-50 ring-indigo-300 rounded-2xl hover:ring-indigo-500 focus:bg-white focus:ring-indigo-500 focus:ring-2',
+      'transition flex-1 resize-none outline-none text-sm ring-1 bg-indigo-50 ring-indigo-300 rounded-2xl hover:ring-indigo-500 focus:bg-white focus:ring-indigo-500 focus:ring-2',
   },
   variants: {
     size: {
