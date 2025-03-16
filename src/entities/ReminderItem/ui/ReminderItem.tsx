@@ -1,92 +1,50 @@
-import {
-  IReminderItem,
-  ReminderItemProps,
-} from '@/src/entities/ReminderItem/model/ReminderItem.models';
-import Checkbox from '@/src/shared/ui/Checkbox';
-import { useReminderItem } from '@/src/entities/ReminderItem/model/useReminderItem';
-import { useIsPresent } from 'framer-motion';
+import { ReminderItemProps } from '@/src/entities/ReminderItem/model/ReminderItem.models';
 import { Reorder } from 'framer-motion';
-import { useState } from 'react';
+import { useReminderItem } from '@/src/entities/ReminderItem/model/useReminderItem';
+import { useReminderItemStyles } from '@/src/entities/ReminderItem/model/useReminderItemStyles';
+import { useReminderItemAnimations } from '@/src/entities/ReminderItem/model/useReminderItemAnimations';
+import { ReminderContent } from '@/src/entities/ReminderItem/ui/ReminderContent';
 
 export const ReminderItem = ({
   data,
   level = 1,
   onEdit,
-  reminderTitleField,
+  textField,
   isNewReminder,
 }: ReminderItemProps) => {
-  const {
-    isReminderCompleted,
-    handleCompleteReminder,
-    paddingLeft,
-    handleEditReminder,
-    defineColorOfBorder,
-  } = useReminderItem(data.isCompleted, level, onEdit);
+  const { nestedItems, handleUpdateNestedItems, handleEditReminder } =
+    useReminderItem(data.isCompleted, onEdit, data.nested);
 
-  const isPresent = useIsPresent();
+  const { isPresent, isDragging, handleSetDragging, animations } =
+    useReminderItemAnimations(isNewReminder);
 
-  const [nestedItems, setNestedItems] = useState<IReminderItem[] | undefined>(
-    data.nested,
-  );
-
-  const [isDragging, setIsDragging] = useState(false);
+  const { position } = useReminderItemStyles(level, isPresent);
 
   return (
     <Reorder.Item
+      key={data.id}
       as={'li'}
       layout
-      initial={{ scaleY: 0, opacity: 0 }}
-      animate={{ scaleY: 1, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 900, damping: 40 }}
-      className={`origin-top ${isPresent ? 'static' : 'absolute'}`}
-      key={data.id}
+      {...animations}
+      className={`origin-top ${position}`}
       value={data}
-      onDragStart={() => setIsDragging(true)}
-      onDragEnd={() => {
-        setTimeout(() => setIsDragging(false), 300);
-      }}
+      dragListener={!isNewReminder}
+      onDragStart={() => handleSetDragging(true)}
+      onDragEnd={() => handleSetDragging(false)}
     >
-      <div
-        className='flex w-full justify-between gap-x-2 rounded-lg py-3 pr-3 hover:bg-indigo-50'
-        style={{ paddingLeft }}
-        onClick={(evt) => {
-          if (isDragging) {
-            return;
-          }
-
-          evt.stopPropagation();
-          handleEditReminder(data);
-        }}
-      >
-        <div
-          className={`flex w-full items-start gap-x-2 border-b-2 ${defineColorOfBorder} overflow-hidden pb-3`}
-        >
-          <div className={'mt-1.75'}>
-            <Checkbox
-              checked={isReminderCompleted}
-              disabled={isNewReminder}
-              onChange={handleCompleteReminder}
-            />
-          </div>
-          <div className='flex w-full flex-col gap-y-2'>
-            {isNewReminder ? (
-              <>{reminderTitleField}</>
-            ) : (
-              <div className={'w-full'}>
-                <span className='flex h-10 items-center text-sm font-bold text-zinc-900'>
-                  {data.title}
-                </span>
-              </div>
-            )}
-            <div>{data.text}</div>
-          </div>
-        </div>
-      </div>
+      <ReminderContent
+        data={data}
+        onEdit={onEdit}
+        isNewReminder={isNewReminder}
+        level={level}
+        textField={textField}
+        isDragging={isDragging}
+      />
       {!!nestedItems?.length && (
         <Reorder.Group
           as={'ul'}
           values={nestedItems}
-          onReorder={setNestedItems}
+          onReorder={handleUpdateNestedItems}
         >
           {nestedItems.map((reminder) => (
             <ReminderItem

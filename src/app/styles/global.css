@@ -1,8 +1,7 @@
 @import 'tailwindcss';
 
 body {
-  height: 100vh;
-  overflow: hidden;
+  @apply h-screen overflow-hidden;
 }
 
 @layer utilities {

@@ -3,6 +3,9 @@ export interface IReminderItem {
   title: string;
   isCompleted: boolean;
   parentId: string | null;
+  dateCreated: string;
+  dateFinished?: string;
+  dateCompleted?: string;
   text?: string;
   nested?: IReminderItem[];
 }
@@ -12,11 +15,5 @@ export interface ReminderItemProps {
   onEdit: (reminder: IReminderItem) => void;
   level?: number;
   isNewReminder?: boolean;
-  reminderTitleField?: React.ReactNode;
-  // onAdd?: () => void;
-}
-
-export interface ReminderFieldEditData {
-  current: string;
-  updated: string;
+  textField?: React.ReactNode;
 }

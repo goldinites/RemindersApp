@@ -47,6 +47,10 @@ export const ReminderEditor = ({
         </div>
       </div>
       <div className={'flex w-full justify-between gap-x-12'}>
+        <Button size={'lg'} onClick={handleSave}>
+          <Image src={CheckIcon} alt={'accept'} />
+          Сохранить
+        </Button>
         <Button
           variant={'warning'}
           size={'lg'}
@@ -54,10 +58,6 @@ export const ReminderEditor = ({
         >
           <Image src={TrashIcon} alt={'delete'} />
           Удалить
-        </Button>
-        <Button size={'lg'} onClick={handleSave}>
-          <Image src={CheckIcon} alt={'accept'} />
-          Сохранить
         </Button>
       </div>
     </div>

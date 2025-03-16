@@ -20,17 +20,15 @@ export const NewReminder = ({
       data={newReminder}
       isNewReminder={true}
       onEdit={() => false}
-      reminderTitleField={
-        <div className={'flex h-10 w-full items-center'}>
-          <TextField
-            variant={'empty'}
-            size={'sm'}
-            placeholder={'Новое напоминание'}
-            value={newReminderTitle}
-            onChange={(evt) => handleUpdateReminderTitle(evt.target.value)}
-            onBlur={handleAddReminder}
-          />
-        </div>
+      textField={
+        <TextField
+          variant={'empty'}
+          size={'sm'}
+          placeholder={'Новое напоминание'}
+          value={newReminderTitle}
+          onChange={(evt) => handleUpdateReminderTitle(evt.target.value)}
+          onBlur={handleAddReminder}
+        />
       }
     />
   );

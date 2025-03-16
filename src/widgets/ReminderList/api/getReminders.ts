@@ -11,6 +11,7 @@ export const getReminders = (): IReminderItem[] => {
       parentId: null,
       text: 'reminder text',
       isCompleted: false,
+      dateCreated: '04.14.2019',
     });
   }
 
@@ -20,16 +21,19 @@ export const getReminders = (): IReminderItem[] => {
       {
         id: createID(),
         title: `reminder 4`,
-        parentId: null,
+        parentId: result[2].id,
         text: 'reminder text',
         isCompleted: false,
+        dateCreated: '05.06.2021',
+        dateFinished: '05.13.2021',
       },
       {
         id: createID(),
         title: `reminder 5`,
-        parentId: null,
+        parentId: result[2].id,
         text: 'reminder text',
         isCompleted: false,
+        dateCreated: '11.13.2020',
       },
     ],
   };

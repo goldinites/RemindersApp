@@ -68,13 +68,6 @@ export const ReminderList = ({ list }: ReminderListProps) => {
                 />
               ))}
             </Reorder.Group>
-            <motion.ul
-              layout
-              layoutId={'list'}
-              className={'scrollbar h-full overflow-y-scroll pr-1'}
-            >
-              <AnimatePresence></AnimatePresence>
-            </motion.ul>
           </div>
           <div className={'flex-1'}>
             {editReminder && (
