@@ -10,6 +10,7 @@ export const useNewReminder = (onAdd: (reminder: IReminderItem) => void) => {
     text: '',
     parentId: null,
     isCompleted: false,
+    dateCreated: new Date().toString(),
   });
 
   const handleAddReminder = useCallback(() => {
@@ -26,6 +27,7 @@ export const useNewReminder = (onAdd: (reminder: IReminderItem) => void) => {
       text: '',
       parentId: null,
       isCompleted: false,
+      dateCreated: new Date().toString(),
     });
   }, [newReminder, onAdd]);
 
