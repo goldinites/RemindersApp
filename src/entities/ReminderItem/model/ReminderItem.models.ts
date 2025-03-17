@@ -14,7 +14,7 @@ export interface ReminderItemProps {
   data: IReminderItem;
   completedReminderIds: string[];
   onEdit: (reminder: IReminderItem) => void;
-  onComplete: (id: string) => void;
+  onComplete: (ids: string[]) => void;
   level?: number;
   isNewReminder?: boolean;
   textField?: React.ReactNode;

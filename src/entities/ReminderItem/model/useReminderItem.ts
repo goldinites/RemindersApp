@@ -1,13 +1,22 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { IReminderItem } from '@/src/entities/ReminderItem/model/ReminderItem.models';
+import { getAllReminderChildren } from '@/src/widgets/ReminderList/model/RemindersListMethods';
 
-export const useReminderItem = (
-  id: string,
-  onEdit: (reminder: IReminderItem) => void,
-  onComplete: (id: string) => void,
-  completedReminderIds: string[],
-  nested?: IReminderItem[],
-) => {
+interface UseReminderItem {
+  reminder: IReminderItem;
+  onEdit: (reminder: IReminderItem) => void;
+  onComplete: (id: string[]) => void;
+  completedReminderIds?: string[];
+  nested?: IReminderItem[];
+}
+
+export const useReminderItem = ({
+  reminder,
+  onEdit,
+  onComplete,
+  completedReminderIds,
+  nested,
+}: UseReminderItem) => {
   const [nestedItems, setNestedItems] = useState<IReminderItem[] | undefined>(
     nested,
   );
@@ -17,10 +26,17 @@ export const useReminderItem = (
   }, []);
 
   const handleCompleteReminder = useCallback(() => {
-    if (nestedItems?.length) {
+    let result = [reminder.id];
+
+    if (reminder?.nested) {
+      result = [
+        ...result,
+        ...getAllReminderChildren(reminder).map((item) => item.id),
+      ];
     }
-    onComplete(id);
-  }, [id, nestedItems, onComplete]);
+
+    onComplete(result);
+  }, [reminder, onComplete]);
 
   const handleEditReminder = useCallback(
     (reminder: IReminderItem) => {
@@ -30,12 +46,32 @@ export const useReminderItem = (
   );
 
   const isReminderCompleted = useMemo(() => {
-    if (!completedReminderIds || !id) {
+    if (!completedReminderIds || !reminder.id) {
       return false;
     }
 
-    return completedReminderIds.includes(id);
-  }, [completedReminderIds, id]);
+    return completedReminderIds.includes(reminder.id);
+  }, [completedReminderIds, reminder.id]);
+
+  useEffect(() => {
+    const allNestedCompleted = reminder.nested?.every((nested) => {
+      return completedReminderIds?.some((id) => nested.id === id);
+    });
+
+    if (allNestedCompleted && !isReminderCompleted) {
+      onComplete([reminder.id]);
+    }
+  }, [
+    completedReminderIds,
+    isReminderCompleted,
+    onComplete,
+    reminder.id,
+    reminder.nested,
+  ]);
+
+  useEffect(() => {
+    handleUpdateNestedItems(reminder.nested ?? []);
+  }, [handleUpdateNestedItems, reminder.nested]);
 
   return {
     nestedItems,

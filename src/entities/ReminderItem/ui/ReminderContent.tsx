@@ -15,7 +15,12 @@ export const ReminderContent = ({
   isDragging,
 }: ReminderItemProps & { isDragging: boolean }) => {
   const { isReminderCompleted, handleCompleteReminder, handleEditReminder } =
-    useReminderItem(data.id, onEdit, onComplete, completedReminderIds);
+    useReminderItem({
+      reminder: data,
+      onEdit,
+      onComplete,
+      completedReminderIds,
+    });
 
   const { paddingLeft, borderColor } = useReminderItemStyles(level);
 

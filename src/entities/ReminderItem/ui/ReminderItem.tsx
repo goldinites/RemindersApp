@@ -15,13 +15,12 @@ export const ReminderItem = ({
   isNewReminder,
 }: ReminderItemProps) => {
   const { nestedItems, handleUpdateNestedItems, handleEditReminder } =
-    useReminderItem(
-      data.id,
+    useReminderItem({
+      reminder: data,
       onEdit,
       onComplete,
-      completedReminderIds,
-      data.nested,
-    );
+      nested: data.nested,
+    });
 
   const { isPresent, isDragging, handleSetDragging, animations } =
     useReminderItemAnimations(isNewReminder);

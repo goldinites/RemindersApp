@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { IReminderItem } from '@/src/entities/ReminderItem/model/ReminderItem.models';
 import { ReminderUpdates } from '@/src/features/ReminderEditor/model/ReminderEditor.models';
 import { flatten } from '@/src/shared/utils/flatten';
@@ -20,13 +20,16 @@ export const useReminderList = (list: IReminderItem[]) => {
   }, []);
 
   const handleReminderComplete = useCallback(
-    (id: string) => {
-      const reminderAlreadyCompleted = completedReminderIds.includes(id);
+    (ids: string[]) => {
+      const origin = ids[0];
+      const reminderAlreadyCompleted = completedReminderIds.includes(origin);
 
       setCompletedReminderIds((prevState) => {
         return reminderAlreadyCompleted
-          ? prevState.filter((item) => item !== id)
-          : [...prevState, id];
+          ? prevState.filter((item) => {
+              return ids.every((id) => id !== item);
+            })
+          : [...prevState, ...ids];
       });
     },
     [completedReminderIds],
@@ -61,14 +64,21 @@ export const useReminderList = (list: IReminderItem[]) => {
           ...getAllReminderChildren(deletedReminder),
         ];
 
-        return prevState.filter((reminder) => {
+        prevState = flatten(prevState);
+
+        prevState = prevState.filter((reminder) => {
           return deletedReminders.every(
             (deleted) => deleted.id !== reminder.id,
           );
         });
+
+        return flatToTree(prevState);
       }
+
       return prevState;
     });
+
+    console.log(id);
 
     setEditReminder(null);
   }, []);
@@ -84,6 +94,14 @@ export const useReminderList = (list: IReminderItem[]) => {
 
     return 'Напоминания';
   }, [editReminder]);
+
+  useEffect(() => {
+    for (const id of completedReminderIds) {
+      setTimeout(() => {
+        handleDeleteReminder(id);
+      }, 700);
+    }
+  }, [completedReminderIds, handleDeleteReminder]);
 
   return {
     reminders,
