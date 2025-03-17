@@ -2,7 +2,7 @@ import { IReminderItem } from '@/src/entities/ReminderItem/model/ReminderItem.mo
 import { createID } from '@/src/shared/utils/createId';
 
 export const getReminders = (): IReminderItem[] => {
-  const result: IReminderItem[] = [];
+  let result: IReminderItem[] = [];
 
   for (let i = 0; i < 3; i++) {
     result.push({
@@ -15,28 +15,26 @@ export const getReminders = (): IReminderItem[] => {
     });
   }
 
-  result[2] = {
-    ...result[2],
-    nested: [
-      {
-        id: createID(),
-        title: `reminder 4`,
-        parentId: result[2].id,
-        text: 'reminder text',
-        isCompleted: false,
-        dateCreated: '05.06.2021',
-        dateFinished: '05.13.2021',
-      },
-      {
-        id: createID(),
-        title: `reminder 5`,
-        parentId: result[2].id,
-        text: 'reminder text',
-        isCompleted: false,
-        dateCreated: '11.13.2020',
-      },
-    ],
-  };
+  result = [
+    ...result,
+    {
+      id: createID(),
+      title: `reminder 4`,
+      parentId: result[2].id,
+      text: 'reminder text',
+      isCompleted: false,
+      dateCreated: '05.06.2021',
+      dateFinished: '05.13.2021',
+    },
+    {
+      id: createID(),
+      title: `reminder 5`,
+      parentId: result[2].id,
+      text: 'reminder text',
+      isCompleted: false,
+      dateCreated: '11.13.2020',
+    },
+  ];
 
   return result;
 };

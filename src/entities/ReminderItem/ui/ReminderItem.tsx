@@ -7,13 +7,21 @@ import { ReminderContent } from '@/src/entities/ReminderItem/ui/ReminderContent'
 
 export const ReminderItem = ({
   data,
+  completedReminderIds,
   level = 1,
   onEdit,
+  onComplete,
   textField,
   isNewReminder,
 }: ReminderItemProps) => {
   const { nestedItems, handleUpdateNestedItems, handleEditReminder } =
-    useReminderItem(data.isCompleted, onEdit, data.nested);
+    useReminderItem(
+      data.id,
+      onEdit,
+      onComplete,
+      completedReminderIds,
+      data.nested,
+    );
 
   const { isPresent, isDragging, handleSetDragging, animations } =
     useReminderItemAnimations(isNewReminder);
@@ -34,7 +42,9 @@ export const ReminderItem = ({
     >
       <ReminderContent
         data={data}
+        completedReminderIds={completedReminderIds}
         onEdit={onEdit}
+        onComplete={onComplete}
         isNewReminder={isNewReminder}
         level={level}
         textField={textField}
@@ -50,8 +60,10 @@ export const ReminderItem = ({
             <ReminderItem
               key={reminder.id}
               data={reminder}
+              completedReminderIds={completedReminderIds}
               level={level + 1}
               onEdit={(reminder) => handleEditReminder(reminder)}
+              onComplete={onComplete}
             />
           ))}
         </Reorder.Group>

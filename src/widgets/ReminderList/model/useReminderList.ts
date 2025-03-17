@@ -3,9 +3,14 @@ import { IReminderItem } from '@/src/entities/ReminderItem/model/ReminderItem.mo
 import { ReminderUpdates } from '@/src/features/ReminderEditor/model/ReminderEditor.models';
 import { flatten } from '@/src/shared/utils/flatten';
 import { flatToTree } from '@/src/shared/utils/flatToTree';
+import { getAllReminderChildren } from '@/src/widgets/ReminderList/model/RemindersListMethods';
+import { searchInTree } from '@/src/shared/utils/searchInTree';
 
 export const useReminderList = (list: IReminderItem[]) => {
-  const [reminders, setReminders] = useState(list);
+  const [reminders, setReminders] = useState(flatToTree(list));
+  const [completedReminderIds, setCompletedReminderIds] = useState<string[]>(
+    list.filter((item) => item.isCompleted).map((item) => item.id),
+  );
   const [editReminder, setEditReminder] = useState<IReminderItem | null>(null);
 
   const handleAddReminder = useCallback((reminder: IReminderItem) => {
@@ -13,6 +18,19 @@ export const useReminderList = (list: IReminderItem[]) => {
       return [reminder, ...prevState];
     });
   }, []);
+
+  const handleReminderComplete = useCallback(
+    (id: string) => {
+      const reminderAlreadyCompleted = completedReminderIds.includes(id);
+
+      setCompletedReminderIds((prevState) => {
+        return reminderAlreadyCompleted
+          ? prevState.filter((item) => item !== id)
+          : [...prevState, id];
+      });
+    },
+    [completedReminderIds],
+  );
 
   const handleUpdateReminder = useCallback((updates: ReminderUpdates) => {
     setReminders((prevState) => {
@@ -35,15 +53,21 @@ export const useReminderList = (list: IReminderItem[]) => {
 
   const handleDeleteReminder = useCallback((id: string) => {
     setReminders((prevState) => {
-      const reminders = flatten(prevState);
+      const deletedReminder = searchInTree(prevState, 'id', id);
 
-      let result: IReminderItem[] = reminders.filter(
-        (reminder) => reminder.id !== id,
-      );
+      if (deletedReminder) {
+        const deletedReminders = [
+          deletedReminder,
+          ...getAllReminderChildren(deletedReminder),
+        ];
 
-      result = flatToTree(result);
-
-      return result;
+        return prevState.filter((reminder) => {
+          return deletedReminders.every(
+            (deleted) => deleted.id !== reminder.id,
+          );
+        });
+      }
+      return prevState;
     });
 
     setEditReminder(null);
@@ -63,9 +87,11 @@ export const useReminderList = (list: IReminderItem[]) => {
 
   return {
     reminders,
+    completedReminderIds,
     setReminders,
     editReminder,
     handleAddReminder,
+    handleReminderComplete,
     handleUpdateReminder,
     handleDeleteReminder,
     handleSetEditReminder,

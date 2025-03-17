@@ -6,14 +6,16 @@ import { dateFormatter } from '@/src/shared/utils/dateFormatter';
 
 export const ReminderContent = ({
   data,
+  completedReminderIds,
   level = 1,
   onEdit,
+  onComplete,
   textField,
   isNewReminder,
   isDragging,
 }: ReminderItemProps & { isDragging: boolean }) => {
   const { isReminderCompleted, handleCompleteReminder, handleEditReminder } =
-    useReminderItem(data.isCompleted, onEdit, data.nested);
+    useReminderItem(data.id, onEdit, onComplete, completedReminderIds);
 
   const { paddingLeft, borderColor } = useReminderItemStyles(level);
 

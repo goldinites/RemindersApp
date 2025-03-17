@@ -18,8 +18,10 @@ export const NewReminder = ({
   return (
     <ReminderItem
       data={newReminder}
+      completedReminders={[]}
       isNewReminder={true}
       onEdit={() => false}
+      onComplete={() => false}
       textField={
         <TextField
           variant={'empty'}

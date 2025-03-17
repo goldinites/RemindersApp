@@ -1,14 +1,13 @@
-import { ChangeEvent, useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { IReminderItem } from '@/src/entities/ReminderItem/model/ReminderItem.models';
 
 export const useReminderItem = (
-  isCompleted: boolean,
+  id: string,
   onEdit: (reminder: IReminderItem) => void,
+  onComplete: (id: string) => void,
+  completedReminderIds: string[],
   nested?: IReminderItem[],
 ) => {
-  const [isReminderCompleted, setIsReminderCompleted] =
-    useState<boolean>(isCompleted);
-
   const [nestedItems, setNestedItems] = useState<IReminderItem[] | undefined>(
     nested,
   );
@@ -17,12 +16,11 @@ export const useReminderItem = (
     setNestedItems(items);
   }, []);
 
-  const handleCompleteReminder = useCallback(
-    (event: ChangeEvent<HTMLInputElement>) => {
-      setIsReminderCompleted(event.target.checked);
-    },
-    [],
-  );
+  const handleCompleteReminder = useCallback(() => {
+    if (nestedItems?.length) {
+    }
+    onComplete(id);
+  }, [id, nestedItems, onComplete]);
 
   const handleEditReminder = useCallback(
     (reminder: IReminderItem) => {
@@ -31,11 +29,19 @@ export const useReminderItem = (
     [onEdit],
   );
 
+  const isReminderCompleted = useMemo(() => {
+    if (!completedReminderIds || !id) {
+      return false;
+    }
+
+    return completedReminderIds.includes(id);
+  }, [completedReminderIds, id]);
+
   return {
     nestedItems,
     handleUpdateNestedItems,
-    isReminderCompleted,
     handleCompleteReminder,
     handleEditReminder,
+    isReminderCompleted,
   };
 };

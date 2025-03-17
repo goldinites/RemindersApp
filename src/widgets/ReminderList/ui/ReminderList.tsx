@@ -2,7 +2,7 @@
 
 import ReminderItem from '@/src/entities/ReminderItem';
 import { ReminderListProps } from '@/src/widgets/ReminderList/model/ReminderList.models';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import ReminderEditor from '@/src/features/ReminderEditor';
 import NewReminder from '@/src/features/NewReminder';
 import { useReminderList } from '@/src/widgets/ReminderList/model/useReminderList';
@@ -19,10 +19,12 @@ const mode = {
 export const ReminderList = ({ list }: ReminderListProps) => {
   const {
     reminders,
+    completedReminderIds,
     setReminders,
     editReminder,
     handleSetEditReminder,
     handleAddReminder,
+    handleReminderComplete,
     handleUpdateReminder,
     handleDeleteReminder,
     titleText,
@@ -64,7 +66,9 @@ export const ReminderList = ({ list }: ReminderListProps) => {
                 <ReminderItem
                   key={reminder.id}
                   data={reminder}
+                  completedReminderIds={completedReminderIds}
                   onEdit={(reminder) => handleSetEditReminder(reminder)}
+                  onComplete={(id) => handleReminderComplete(id)}
                 />
               ))}
             </Reorder.Group>

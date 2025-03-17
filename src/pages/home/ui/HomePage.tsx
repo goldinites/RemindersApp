@@ -1,10 +1,9 @@
 import { IReminderItem } from '@/src/entities/ReminderItem/model/ReminderItem.models';
 import { getReminders } from '@/src/widgets/ReminderList/api/getReminders';
 import ReminderList from '@/src/widgets/ReminderList';
-import { flatToTree } from '@/src/shared/utils/flatToTree';
 
 export const HomePage = () => {
-  const reminders: IReminderItem[] = flatToTree(getReminders());
+  const reminders: IReminderItem[] = getReminders();
 
   return (
     <div className={'h-full py-12'}>
