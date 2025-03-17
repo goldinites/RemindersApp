@@ -6,7 +6,10 @@ import { flatToTree } from '@/src/shared/utils/flatToTree';
 import { getAllReminderChildren } from '@/src/widgets/ReminderList/model/RemindersListMethods';
 import { searchInTree } from '@/src/shared/utils/searchInTree';
 
-export const useReminderList = (list: IReminderItem[]) => {
+export const useReminderList = (
+  list: IReminderItem[],
+  onEdit: (reminder: IReminderItem) => void,
+) => {
   const [reminders, setReminders] = useState(flatToTree(list));
   const [completedReminderIds, setCompletedReminderIds] = useState<string[]>(
     list.filter((item) => item.isCompleted).map((item) => item.id),
@@ -56,7 +59,7 @@ export const useReminderList = (list: IReminderItem[]) => {
 
   const handleDeleteReminder = useCallback((id: string) => {
     setReminders((prevState) => {
-      const deletedReminder = searchInTree(prevState, 'id', id);
+      const deletedReminder = searchInTree<IReminderItem>(prevState, 'id', id);
 
       if (deletedReminder) {
         const deletedReminders = [
@@ -78,22 +81,15 @@ export const useReminderList = (list: IReminderItem[]) => {
       return prevState;
     });
 
-    console.log(id);
-
     setEditReminder(null);
   }, []);
 
-  const handleSetEditReminder = useCallback((value: IReminderItem | null) => {
-    setEditReminder(value);
-  }, []);
-
-  const titleText = useMemo(() => {
-    if (editReminder) {
-      return `Редактирование ${editReminder.title}`;
-    }
-
-    return 'Напоминания';
-  }, [editReminder]);
+  const handleEditReminder = useCallback(
+    (reminder: IReminderItem) => {
+      onEdit(reminder);
+    },
+    [onEdit],
+  );
 
   useEffect(() => {
     for (const id of completedReminderIds) {
@@ -112,7 +108,6 @@ export const useReminderList = (list: IReminderItem[]) => {
     handleReminderComplete,
     handleUpdateReminder,
     handleDeleteReminder,
-    handleSetEditReminder,
-    titleText,
+    handleEditReminder,
   };
 };

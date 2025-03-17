@@ -16,36 +16,24 @@ const mode = {
   edit: { translateX: '-50%' },
 };
 
-export const ReminderList = ({ list }: ReminderListProps) => {
+export const ReminderList = ({
+  list,
+  editReminder,
+  onEdit,
+}: ReminderListProps) => {
   const {
     reminders,
     completedReminderIds,
     setReminders,
-    editReminder,
-    handleSetEditReminder,
     handleAddReminder,
     handleReminderComplete,
     handleUpdateReminder,
     handleDeleteReminder,
-    titleText,
-  } = useReminderList(list);
+    handleEditReminder,
+  } = useReminderList(list, onEdit);
 
   return (
     <div className='flex h-full flex-col gap-y-3'>
-      <div className={'flex items-start gap-x-3'}>
-        {editReminder && (
-          <div
-            className={'mt-1.25 flex-[0_0_24px] cursor-pointer'}
-            onClick={() => handleSetEditReminder(null)}
-          >
-            <Image src={BackIcon} alt={'back'} />
-          </div>
-        )}
-        <Heading tag={'h1'} type={editReminder ? 'h3' : 'h1'}>
-          {titleText}
-        </Heading>
-      </div>
-
       <div className='h-full w-full overflow-hidden'>
         <motion.div
           className={'flex h-full w-[200%]'}
@@ -67,7 +55,7 @@ export const ReminderList = ({ list }: ReminderListProps) => {
                   key={reminder.id}
                   data={reminder}
                   completedReminderIds={completedReminderIds}
-                  onEdit={(reminder) => handleSetEditReminder(reminder)}
+                  onEdit={(reminder) => handleEditReminder(reminder)}
                   onComplete={(id) => handleReminderComplete(id)}
                 />
               ))}

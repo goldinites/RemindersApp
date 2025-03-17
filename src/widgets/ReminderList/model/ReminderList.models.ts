@@ -2,4 +2,6 @@ import { IReminderItem } from '@/src/entities/ReminderItem/model/ReminderItem.mo
 
 export interface ReminderListProps {
   list: IReminderItem[];
+  editReminder?: IReminderItem | null;
+  onEdit: (reminder: IReminderItem) => void;
 }

@@ -36,5 +36,18 @@ export const getReminders = (): IReminderItem[] => {
     },
   ];
 
+  result = [
+    ...result,
+    {
+      id: createID(),
+      title: `reminder 6`,
+      parentId: result[3].id,
+      text: 'reminder text',
+      isCompleted: false,
+      dateCreated: '05.06.2021',
+      dateFinished: '05.13.2021',
+    },
+  ];
+
   return result;
 };

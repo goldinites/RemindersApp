@@ -19,7 +19,6 @@ export const ReminderItem = ({
       reminder: data,
       onEdit,
       onComplete,
-      nested: data.nested,
     });
 
   const { isPresent, isDragging, handleSetDragging, animations } =

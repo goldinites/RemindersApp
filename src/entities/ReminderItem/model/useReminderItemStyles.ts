@@ -14,15 +14,15 @@ export const useReminderItemStyles = (level: number, isPresent?: boolean) => {
       case 1:
         return 'border-indigo-300';
       case 2:
-        return 'border-indigo-400';
-      case 3:
         return 'border-indigo-500';
+      case 3:
+        return 'border-indigo-700';
       case 4:
-        return 'border-indigo-600';
+        return 'border-indigo-900';
       case 5:
-        return 'border-indigo-700';
+        return 'border-indigo-950';
       default:
-        return 'border-indigo-700';
+        return 'border-indigo-950';
     }
   }, [level]);
 

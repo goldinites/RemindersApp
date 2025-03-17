@@ -7,7 +7,6 @@ interface UseReminderItem {
   onEdit: (reminder: IReminderItem) => void;
   onComplete: (id: string[]) => void;
   completedReminderIds?: string[];
-  nested?: IReminderItem[];
 }
 
 export const useReminderItem = ({
@@ -15,10 +14,9 @@ export const useReminderItem = ({
   onEdit,
   onComplete,
   completedReminderIds,
-  nested,
 }: UseReminderItem) => {
   const [nestedItems, setNestedItems] = useState<IReminderItem[] | undefined>(
-    nested,
+    reminder.nested,
   );
 
   const handleUpdateNestedItems = useCallback((items: IReminderItem[]) => {
@@ -52,22 +50,6 @@ export const useReminderItem = ({
 
     return completedReminderIds.includes(reminder.id);
   }, [completedReminderIds, reminder.id]);
-
-  useEffect(() => {
-    const allNestedCompleted = reminder.nested?.every((nested) => {
-      return completedReminderIds?.some((id) => nested.id === id);
-    });
-
-    if (allNestedCompleted && !isReminderCompleted) {
-      onComplete([reminder.id]);
-    }
-  }, [
-    completedReminderIds,
-    isReminderCompleted,
-    onComplete,
-    reminder.id,
-    reminder.nested,
-  ]);
 
   useEffect(() => {
     handleUpdateNestedItems(reminder.nested ?? []);
