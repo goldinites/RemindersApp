@@ -7,7 +7,7 @@ export const HomePage = () => {
 
   return (
     <div className={'h-full py-12'}>
-      <div className='mx-auto h-full w-full max-w-2xl flex-1 overflow-hidden rounded-xl bg-white p-6 pr-3'>
+      <div className='mx-auto h-full w-full max-w-2xl flex-1 overflow-hidden rounded-3xl bg-white p-6'>
         <RemindersMain reminders={reminders} />
       </div>
     </div>

@@ -1,10 +1,9 @@
-import { IReminderItem } from '@/src/entities/ReminderItem/model/ReminderItem.models';
+export type CategoryKey = 'all' | 'planned' | 'today' | 'completed';
 
 export interface ReminderCategory {
   title: string;
-  key: string;
+  key: CategoryKey;
   count?: number;
-  list?: IReminderItem[];
 }
 
 export interface ReminderCategoriesProps {

@@ -13,12 +13,14 @@ export const ReminderContent = ({
   textField,
   isNewReminder,
   isDragging,
+  onReorder,
 }: ReminderItemProps & { isDragging: boolean }) => {
   const { isReminderCompleted, handleCompleteReminder, handleEditReminder } =
     useReminderItem({
       reminder: data,
       onEdit,
       onComplete,
+      onReorder,
       completedReminderIds,
     });
 
@@ -42,9 +44,9 @@ export const ReminderContent = ({
       >
         <div className={'mt-1.75'}>
           <Checkbox
-            checked={isReminderCompleted}
+            checked={data.isCompleted}
             disabled={isNewReminder}
-            onChange={handleCompleteReminder}
+            onChange={() => handleCompleteReminder(data.id)}
           />
         </div>
         <div className='flex w-full flex-col gap-y-2'>

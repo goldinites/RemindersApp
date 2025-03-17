@@ -6,10 +6,13 @@ import { ReminderCategories } from '@/src/widgets/ReminderCategories/ui/Reminder
 import ReminderList from '@/src/widgets/ReminderList';
 import { IReminderItem } from '@/src/entities/ReminderItem/model/ReminderItem.models';
 import { useRemindersMain } from '@/src/widgets/RemindersMain/model/useRemindersMain';
+import { motion } from 'framer-motion';
+import ReminderEditor from '@/src/features/ReminderEditor';
 
 const mode = {
   categories: { translateX: '0' },
-  list: { translateX: '-50%' },
+  list: { translateX: '-33%' },
+  edit: { translateX: '-66%' },
 };
 
 export const RemindersMain = ({
@@ -18,18 +21,24 @@ export const RemindersMain = ({
   reminders: IReminderItem[];
 }) => {
   const {
+    titleText,
     categories,
     currentCategory,
-    handleClickBack,
+    filteredReminders,
     editReminder,
-    list,
-    titleText,
-    handleSetEditReminder,
+    handleClickBack,
     handleSetCategory,
+    handleDeleteReminder,
+    handleSetReminders,
+    handleReorderNested,
+    handleAddReminder,
+    handleUpdateReminder,
+    handleSetEditReminder,
+    handleCompleteReminder,
   } = useRemindersMain(reminders);
 
   return (
-    <div className={'h-full'}>
+    <div className={'flex h-full flex-col gap-10'}>
       <div className={'flex items-start gap-x-3'}>
         {(currentCategory || editReminder) && (
           <div
@@ -44,20 +53,41 @@ export const RemindersMain = ({
           {titleText}
         </Heading>
       </div>
-      <div className={'h-full'}>
-        {currentCategory ? (
-          <ReminderList
-            list={list ?? []}
-            editReminder={editReminder}
-            onEdit={(reminder) => handleSetEditReminder(reminder)}
-          />
-        ) : (
+      <motion.div
+        className={'flex h-full w-[calc(300%+48px)] flex-1 gap-12'}
+        animate={
+          editReminder ? 'edit' : currentCategory ? 'list' : 'categories'
+        }
+        transition={{ duration: 0.25, ease: 'linear' }}
+        variants={mode}
+      >
+        <div className={'flex-1'}>
           <ReminderCategories
             categories={categories}
             onSetCategory={handleSetCategory}
           />
-        )}
-      </div>
+        </div>
+        <div className={'flex flex-1'}>
+          <ReminderList
+            reminders={filteredReminders ?? []}
+            isCompletedList={currentCategory?.key === 'completed'}
+            onReorder={handleSetReminders}
+            onReorderNested={handleReorderNested}
+            onAddReminder={handleAddReminder}
+            onEditReminder={handleSetEditReminder}
+            onCompleteReminder={handleCompleteReminder}
+          />
+        </div>
+        <div className={'flex-1'}>
+          {editReminder && (
+            <ReminderEditor
+              reminder={editReminder}
+              onSave={handleUpdateReminder}
+              onDelete={handleDeleteReminder}
+            />
+          )}
+        </div>
+      </motion.div>
     </div>
   );
 };

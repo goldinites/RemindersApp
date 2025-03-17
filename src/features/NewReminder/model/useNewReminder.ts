@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { ChangeEvent, useCallback, useState } from 'react';
 import { IReminderItem } from '@/src/entities/ReminderItem/model/ReminderItem.models';
 import { createID } from '@/src/shared/utils/createId';
 
@@ -11,6 +11,7 @@ export const useNewReminder = (onAdd: (reminder: IReminderItem) => void) => {
     parentId: null,
     isCompleted: false,
     dateCreated: new Date().toString(),
+    sortNumber: 0,
   });
 
   const handleAddReminder = useCallback(() => {
@@ -28,15 +29,20 @@ export const useNewReminder = (onAdd: (reminder: IReminderItem) => void) => {
       parentId: null,
       isCompleted: false,
       dateCreated: new Date().toString(),
+      sortNumber: 0,
     });
   }, [newReminder, onAdd]);
 
-  const handleUpdateReminderTitle = useCallback((title: string) => {
-    setNewReminderTitle(title);
-    setNewReminder((prevState) => {
-      return { ...prevState, title };
-    });
-  }, []);
+  const handleUpdateReminderTitle = useCallback(
+    (evt: ChangeEvent<HTMLInputElement>) => {
+      const title = evt.target.value;
+      setNewReminderTitle(title);
+      setNewReminder((prevState) => {
+        return { ...prevState, title };
+      });
+    },
+    [],
+  );
 
   return {
     newReminder,

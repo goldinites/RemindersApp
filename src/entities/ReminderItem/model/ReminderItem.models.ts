@@ -4,6 +4,7 @@ export interface IReminderItem {
   isCompleted: boolean;
   parentId: string | null;
   dateCreated: string;
+  sortNumber: number;
   dateFinished?: string;
   dateCompleted?: string;
   text?: string;
@@ -14,7 +15,8 @@ export interface ReminderItemProps {
   data: IReminderItem;
   completedReminderIds: string[];
   onEdit: (reminder: IReminderItem) => void;
-  onComplete: (ids: string[]) => void;
+  onReorder: (reminders: IReminderItem[]) => void;
+  onComplete: (id: string) => void;
   level?: number;
   isNewReminder?: boolean;
   textField?: React.ReactNode;

@@ -18,17 +18,18 @@ export const NewReminder = ({
   return (
     <ReminderItem
       data={newReminder}
-      completedReminders={[]}
+      completedReminderIds={[]}
       isNewReminder={true}
       onEdit={() => false}
       onComplete={() => false}
+      onReorder={() => false}
       textField={
         <TextField
           variant={'empty'}
           size={'sm'}
           placeholder={'Новое напоминание'}
           value={newReminderTitle}
-          onChange={(evt) => handleUpdateReminderTitle(evt.target.value)}
+          onChange={handleUpdateReminderTitle}
           onBlur={handleAddReminder}
         />
       }

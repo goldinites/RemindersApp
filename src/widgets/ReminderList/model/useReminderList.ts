@@ -1,113 +1,66 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { IReminderItem } from '@/src/entities/ReminderItem/model/ReminderItem.models';
 import { ReminderUpdates } from '@/src/features/ReminderEditor/model/ReminderEditor.models';
-import { flatten } from '@/src/shared/utils/flatten';
-import { flatToTree } from '@/src/shared/utils/flatToTree';
-import { getAllReminderChildren } from '@/src/widgets/ReminderList/model/RemindersListMethods';
-import { searchInTree } from '@/src/shared/utils/searchInTree';
 
 export const useReminderList = (
-  list: IReminderItem[],
-  onEdit: (reminder: IReminderItem) => void,
+  onReorder: (reminders: IReminderItem[]) => void,
+  onReorderNested: (reminders: IReminderItem[]) => void,
+  onAddReminder: (reminder: IReminderItem) => void,
+  onEditReminder: (reminder: IReminderItem | null) => void,
+  onCompleteReminder: (id: string) => void,
+  // reminders: IReminderItem[],
+  // onDelete: (id: string) => void,
 ) => {
-  const [reminders, setReminders] = useState(flatToTree(list));
-  const [completedReminderIds, setCompletedReminderIds] = useState<string[]>(
-    list.filter((item) => item.isCompleted).map((item) => item.id),
-  );
-  const [editReminder, setEditReminder] = useState<IReminderItem | null>(null);
+  // const [reminders, setReminders] = useState(flatToTree(list));
 
-  const handleAddReminder = useCallback((reminder: IReminderItem) => {
-    setReminders((prevState) => {
-      return [reminder, ...prevState];
-    });
-  }, []);
+  const handleReorderReminders = useCallback(
+    (reminders: IReminderItem[]) => {
+      onReorder(reminders);
+    },
+    [onReorder],
+  );
+
+  const handleReorderNestedReminders = useCallback(
+    (reminders: IReminderItem[]) => {
+      onReorderNested(reminders);
+    },
+    [onReorderNested],
+  );
+
+  // const [completedReminderIds, setCompletedReminderIds] = useState<string[]>(
+  //   list.filter((item) => item.isCompleted).map((item) => item.id),
+  // );
+  // const [editReminder, setEditReminder] = useState<IReminderItem | null>(null);
+
+  const handleAddReminder = useCallback(
+    (reminder: IReminderItem) => {
+      onAddReminder(reminder);
+      // setReminders((prevState) => {
+      //   return [reminder, ...prevState];
+      // });
+    },
+    [onAddReminder],
+  );
 
   const handleReminderComplete = useCallback(
-    (ids: string[]) => {
-      const origin = ids[0];
-      const reminderAlreadyCompleted = completedReminderIds.includes(origin);
-
-      setCompletedReminderIds((prevState) => {
-        return reminderAlreadyCompleted
-          ? prevState.filter((item) => {
-              return ids.every((id) => id !== item);
-            })
-          : [...prevState, ...ids];
-      });
+    (id: string) => {
+      onCompleteReminder(id);
     },
-    [completedReminderIds],
+    [onCompleteReminder],
   );
-
-  const handleUpdateReminder = useCallback((updates: ReminderUpdates) => {
-    setReminders((prevState) => {
-      const reminders = flatten(prevState);
-
-      let result: IReminderItem[] = reminders.map((reminder) => {
-        if (reminder.id === updates.id) {
-          return { ...reminder, title: updates.title, text: updates.text };
-        }
-
-        return reminder;
-      });
-
-      result = flatToTree(result);
-      return result;
-    });
-
-    setEditReminder(null);
-  }, []);
-
-  const handleDeleteReminder = useCallback((id: string) => {
-    setReminders((prevState) => {
-      const deletedReminder = searchInTree<IReminderItem>(prevState, 'id', id);
-
-      if (deletedReminder) {
-        const deletedReminders = [
-          deletedReminder,
-          ...getAllReminderChildren(deletedReminder),
-        ];
-
-        prevState = flatten(prevState);
-
-        prevState = prevState.filter((reminder) => {
-          return deletedReminders.every(
-            (deleted) => deleted.id !== reminder.id,
-          );
-        });
-
-        return flatToTree(prevState);
-      }
-
-      return prevState;
-    });
-
-    setEditReminder(null);
-  }, []);
 
   const handleEditReminder = useCallback(
-    (reminder: IReminderItem) => {
-      onEdit(reminder);
+    (reminder: IReminderItem | null) => {
+      onEditReminder(reminder);
     },
-    [onEdit],
+    [onEditReminder],
   );
 
-  useEffect(() => {
-    for (const id of completedReminderIds) {
-      setTimeout(() => {
-        handleDeleteReminder(id);
-      }, 700);
-    }
-  }, [completedReminderIds, handleDeleteReminder]);
-
   return {
-    reminders,
-    completedReminderIds,
-    setReminders,
-    editReminder,
+    handleReorderReminders,
+    handleReorderNestedReminders,
     handleAddReminder,
     handleReminderComplete,
-    handleUpdateReminder,
-    handleDeleteReminder,
     handleEditReminder,
   };
 };

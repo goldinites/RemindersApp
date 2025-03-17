@@ -13,11 +13,13 @@ export const ReminderItem = ({
   onComplete,
   textField,
   isNewReminder,
+  onReorder,
 }: ReminderItemProps) => {
   const { nestedItems, handleUpdateNestedItems, handleEditReminder } =
     useReminderItem({
       reminder: data,
       onEdit,
+      onReorder,
       onComplete,
     });
 
@@ -41,12 +43,13 @@ export const ReminderItem = ({
       <ReminderContent
         data={data}
         completedReminderIds={completedReminderIds}
-        onEdit={onEdit}
+        onEdit={handleEditReminder}
         onComplete={onComplete}
         isNewReminder={isNewReminder}
         level={level}
         textField={textField}
         isDragging={isDragging}
+        onReorder={() => false}
       />
       {!!nestedItems?.length && (
         <Reorder.Group
@@ -60,8 +63,9 @@ export const ReminderItem = ({
               data={reminder}
               completedReminderIds={completedReminderIds}
               level={level + 1}
-              onEdit={(reminder) => handleEditReminder(reminder)}
+              onEdit={handleEditReminder}
               onComplete={onComplete}
+              onReorder={handleUpdateNestedItems}
             />
           ))}
         </Reorder.Group>
